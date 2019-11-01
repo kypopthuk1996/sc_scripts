@@ -1,11 +1,10 @@
 import os
 import json
 
-pathJsonScript = '/home/dima/Work/test'
+pathJsonScript = '/Users/dmitrijminor/tests/cdr'
 res = 0
 
 def loadjson(path):
-    m = 0
     res = [] #Create empty dictionary
     with os.scandir(path) as it: #scan path to JSON file
         for entry in it:
@@ -19,15 +18,15 @@ def loadjson(path):
 def parse_json(file):
     new_dict = []
     for f1 in file:
-        print(f1)
         with open(f1, 'r') as f:
             data = json.load(f)
         g = data.get('Tests', '')
         for a in g:
             new_dict.append(['', data.get('TestName', ''), a.get('Name', ''), a.get('Description', ''), '', '', 'auto'])
-    print(new_dict)
+    return new_dict
 
 
 listpath = loadjson(pathJsonScript)
 #print('\n'.join(listpath))
 fin = parse_json(listpath)
+print(fin)

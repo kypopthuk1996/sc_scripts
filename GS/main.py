@@ -6,45 +6,52 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
-# If modifying these scopes, delete the file token.pickle.
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
+import httplib2
+from oauth2client.service_account import ServiceAccountCredentials
+from add_object_to_gsheets import parse_json, loadjson
 
 # The ID and range of a sample spreadsheet.
 SAMPLE_SPREADSHEET_ID = '1cqJVtaHWTozVZFdKBBUNwCqET63aY9JZVgXRuqwT_aA'
-SAMPLE_RANGE_NAME = 'SIP!A1:J1'
+SAMPLE_RANGE_NAME = 'SIP!B1:B3'
+CREDENTIALS_FILE = 'creds.json'
+pathJsonScript = '/Users/dmitrijminor/tests'
 
 def main():
     """Shows basic usage of the Sheets API.
     Prints values from a sample spreadsheet.
     """
-    creds = None
-    # The file token.pickle stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
-            creds = pickle.load(token)
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        with open('token.pickle', 'wb') as token:
-            pickle.dump(creds, token)
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(
+        CREDENTIALS_FILE,
+        ['https://www.googleapis.com/auth/spreadsheets',
+         'https://www.googleapis.com/auth/drive'])
+    httpAuth = credentials.authorize(httplib2.Http())
+    service_auth = build('sheets', 'v4', http=httpAuth)
+    return service_auth
 
-    service = build('sheets', 'v4', credentials=creds)
-
+def show_sheets(obj):
     # Call the Sheets API
-    sheet = service.spreadsheets()
-    result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                                range=SAMPLE_RANGE_NAME).execute()
+    result = obj.spreadsheets().values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
+                        range=SAMPLE_RANGE_NAME, majorDimension='ROWS').execute()
     values = result.get('values', [])
-
     pprint(values)
 
+def add_sheets(obj, prs_val, m):
+    # Add to Sheets new value
+    result = obj.spreadsheets().values().batchUpdate(
+        spreadsheetId=SAMPLE_SPREADSHEET_ID,
+        body={
+            "valueInputOption": "USER_ENTERED",
+            "data": [
+                {"range": f"Лист3!A1:G{m}",
+                 "majorDimension": "ROWS",
+                 "values": prs_val}
+            ]
+        }
+    ).execute()
+
 if __name__ == '__main__':
-    main()
+    service = main()
+    show_sheets(service)
+    listpath = loadjson(pathJsonScript)
+    add_sheets(service, parse_json(listpath), 987)
+    #print(parse_json(listpath))
