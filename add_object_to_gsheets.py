@@ -17,15 +17,14 @@ def loadjson(path):
     return res
 
 def parse_json(file):
-    new_dict = {}
+    new_dict = []
     for f1 in file:
         print(f1)
         with open(f1, 'r') as f:
             data = json.load(f)
-        new_dict[data.get('TestName', '')] = {}
         g = data.get('Tests', '')
         for a in g:
-            new_dict[data.get('TestName', '')][a.get('Name', '')] = a.get('Description', '')
+            new_dict.append(['', data.get('TestName', ''), a.get('Name', ''), a.get('Description', ''), '', '', 'auto'])
     print(new_dict)
 
 
