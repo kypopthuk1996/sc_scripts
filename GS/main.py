@@ -8,7 +8,7 @@ from google.auth.transport.requests import Request
 
 import httplib2
 from oauth2client.service_account import ServiceAccountCredentials
-from add_object_to_gsheets import parse_json, loadjson
+from add_object_to_gsheets import loadjson, parse_json
 
 # The ID and range of a sample spreadsheet.
 SAMPLE_SPREADSHEET_ID = '1cqJVtaHWTozVZFdKBBUNwCqET63aY9JZVgXRuqwT_aA'
@@ -16,7 +16,7 @@ SAMPLE_RANGE_NAME = 'SIP!B1:B3'
 CREDENTIALS_FILE = 'creds.json'
 pathJsonScript = '/Users/dmitrijminor/tests'
 
-def main():
+def glav():
     """Shows basic usage of the Sheets API.
     Prints values from a sample spreadsheet.
     """
@@ -42,16 +42,14 @@ def add_sheets(obj, prs_val, m):
         body={
             "valueInputOption": "USER_ENTERED",
             "data": [
-                {"range": f"Лист3!A1:G{m}",
+                {"range": f"SIP!A313:I{m}",
                  "majorDimension": "ROWS",
                  "values": prs_val}
             ]
         }
     ).execute()
 
-if __name__ == '__main__':
-    service = main()
-    show_sheets(service)
-    listpath = loadjson(pathJsonScript)
-    add_sheets(service, parse_json(listpath), 987)
-    #print(parse_json(listpath))
+service = glav()
+show_sheets(service)
+listpath = loadjson(pathJsonScript)
+add_sheets(service, parse_json(listpath), 1301)
