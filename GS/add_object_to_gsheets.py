@@ -1,6 +1,5 @@
 import os
 import json
-
 pathJsonScript = '/Users/dmitrijminor/tests'
 res = 0
 
@@ -17,16 +16,19 @@ def loadjson(path):
 
 def parse_json(file):
     new_dict = []
+    m = -1
     for f1 in file:
         with open(f1, 'r') as f:
             data = json.load(f)
         g = data.get('Tests', '')
         for a in g:
-            new_dict.append(['', data.get('TestName', ''), a.get('Name', ''), a.get('Description', ''), '', '', '', 'auto', 'sip'])
-    return new_dict
+            new_dict.append(['', data.get('TestName', ''), a.get('Name', ''), a.get('Description', ''), 'Succ', '', '', 'auto', 'sip'])
+            m += 1
+    return new_dict, m
 
 
-listpath = loadjson(pathJsonScript)
-#print('\n'.join(listpath))
-fin = parse_json(listpath)
-print(fin)
+if __name__ == '__main__':
+    listpath = loadjson(pathJsonScript)
+    #print('\n'.join(listpath))
+    fin = parse_json(listpath)
+    print(fin[1])
