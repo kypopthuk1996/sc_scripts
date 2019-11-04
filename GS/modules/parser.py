@@ -27,6 +27,6 @@ class Parser():
             g = data.get('Tests', '')
             for a in g:
                 new_dict.append(
-                    ['', data.get('TestName', ''), a.get('Name', ''), a.get('Description', ''), '', '', 'auto'])
+                    ['', '', a.get('Name', ''), a.get('Description', ''), '', '', 'auto'])
         print(new_dict)
         return new_dict
