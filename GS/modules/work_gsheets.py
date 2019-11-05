@@ -28,9 +28,9 @@ def main_fun():
     service_auth = build('sheets', 'v4', http=httpAuth)
     return service_auth
 
-def show_sheets(obj, range):
+def show_sheets(obj, sps_id ,range):
     # Call the Sheets API
-    result = obj.spreadsheets().values().get(spreadsheetId=MAIN_SPREADSHEET_ID,
+    result = obj.spreadsheets().values().get(spreadsheetId=sps_id,
                         range=range, majorDimension='ROWS').execute()
     values = result.get('values', [])
     return values

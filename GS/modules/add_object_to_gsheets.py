@@ -7,6 +7,10 @@ res = 0
 
 
 def loadjson(path):
+    '''
+    Функция сканирует переданную ей папку на наличие файлов формата JSON.
+    После чего возвращает список путей до таких файлов
+    '''
     res = [] #Create empty dictionary
     with os.scandir(path) as it: #scan path to JSON file
         for entry in it:
