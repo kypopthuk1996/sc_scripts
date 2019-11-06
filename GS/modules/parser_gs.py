@@ -1,17 +1,38 @@
+import itertools
+
 class Main_part():
     '''Класс раздела'''
-    def __init__(self, name, desc, tag):
+    def __init__(self, root_part, name, desc, tag):
         '''Инициализация атрибутов:
         name - название раздела
         desc - описание раздела
         tag - тег раздела
         '''
-        self.name = name
+        self.root_part = 'ROOT'
         self.desc = desc
-        self.tag = ta
+        self.tag = tag
 
 class Parser():
     '''Класс определяет как тип строки пришел с таблиц (Раздел, подраздел или тест-кейс)'''
+
+    def pars_key_columns(self, data_gs):
+        result = [value for value in data_gs[0]]
+        key_colunns_dict = dict()
+        for id, item in enumerate(result):
+            key_colunns_dict[str(item).upper()] = item
+        return key_colunns_dict
+
+    def new_pars(self, data_gs, key_columns):
+        #Парсим раздел
+        result = [value for value in data_gs]
+        str_dict = dict(itertools.zip_longest(key_columns, result, fillvalue=''))
+        if str_dict['TAG'] != '':
+            tag_str = str(str_dict.get('TAG', '')).split(sep=',')
+            if len(tag_str) == 1:
+                print('This is part')
+        return str_dict
+
+
     def pars_gs(self, *data_gs):
         result = [value for a in data_gs for value in a]
         m = 0
