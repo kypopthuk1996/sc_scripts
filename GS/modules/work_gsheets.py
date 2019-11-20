@@ -17,9 +17,10 @@ pathJsonScript = '/Users/dmitrijminor/tests/cdr'
 TEST_RANGE = 'SIP!A313:I1299'
 START_POS = 3
 def main_fun():
-    """Shows basic usage of the Sheets API.
-    Prints values from a sample spreadsheet.
-    """
+    '''
+    Главная функция, которая произвродит аутентификациб в таблицах
+    :return:
+    '''
     credentials = ServiceAccountCredentials.from_json_keyfile_name(
         CREDENTIALS_FILE,
         ['https://www.googleapis.com/auth/spreadsheets',
@@ -29,14 +30,28 @@ def main_fun():
     return service_auth
 
 def show_sheets(obj, sps_id ,range):
-    # Call the Sheets API
+    '''
+    Фунция считывает строки из таблицы
+    :param obj: вызывает результат main_fun
+    :param sps_id: ID таблицы, которую нужно читать
+    :param range: Диапозон в котором производится считывание
+    :return: возвращает список из списков. Где каждый список это строка таблицы
+    '''
     result = obj.spreadsheets().values().get(spreadsheetId=sps_id,
                         range=range, majorDimension='ROWS').execute()
     values = result.get('values', [])
     return values
 
 def add_sheets(obj, sps_id, prs_val, start_pos, fin_pos):
-    # Add to Sheets new value
+    '''
+    Функция добавляет в таблицу новые значения
+    :param obj: вызывает результат main_fun
+    :param sps_id: ID таблицы, которую нужно читать
+    :param prs_val: Список с добавляемыми значениями
+    :param start_pos: Стартовая строка
+    :param fin_pos: Последняя строка
+    :return:
+    '''
     result = obj.spreadsheets().values().batchUpdate(
         spreadsheetId=sps_id,
         body={
@@ -50,6 +65,13 @@ def add_sheets(obj, sps_id, prs_val, start_pos, fin_pos):
     ).execute()
 
 def clear_list(obj, start_pos, fin_pos):
+    '''
+    Фунция очищает таблицу в заданном диапозоне
+    :param obj: вызывает результат main_fun
+    :param start_pos: Стартовая строка
+    :param fin_pos: Последняя строка
+    :return:
+    '''
     body_clear_list = {
         "requests": [
             {
@@ -70,6 +92,13 @@ def clear_list(obj, start_pos, fin_pos):
     ).execute()
 
 def copy_sheets(obj,COPY_SPREADSHEET_ID,sheet_id):
+    '''
+    Функция копирует одну таблицу в другую
+    :param obj: вызывает результат main_fun
+    :param COPY_SPREADSHEET_ID:  ID новой таблицы
+    :param sheet_id: ID страницы, которую стоит копировать
+    :return:
+    '''
     body_copy_sheets = {
     'destination_spreadsheet_id': COPY_SPREADSHEET_ID,
     }
